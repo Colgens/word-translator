@@ -21,6 +21,8 @@
     spring.datasource.username=your_database_username
     spring.datasource.password=your_database_password
     yandex.translate.api.key=your_yandex_translate_api_key
+    spring.sql.init.mode=always
+    spring.sql.init.schema-locations=classpath:schema.sql
     ```
    #### Пример заполненого файла:
    ```properties
@@ -28,6 +30,8 @@
    spring.datasource.username=postgres
    spring.datasource.password=123456789
    yandex.translate.api.key=AQ1Nzs8w4F3f03H6t2fT3uk4Jun3
+   spring.sql.init.mode=always
+   spring.sql.init.schema-locations=classpath:schema.sql
    ```
 
 2. Настройте схему базы данных. Отредактируйте файл `src/main/resources/schema.sql` в соответствии с используемой базой данных. Примеры схемы для различных баз данных:
