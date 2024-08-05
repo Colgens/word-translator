@@ -29,7 +29,7 @@ public class TranslationService {
 
         List<CompletableFuture<String>> translationFutures = wordsWithPunctuation.stream()
                 .map(word -> CompletableFuture.supplyAsync(() -> {
-                    if (word.matches("\\w+")) {
+                    if (word.matches("[^\\p{Punct}\\s]+-[^\\p{Punct}\\s]+|[^\\p{Punct}\\s]+")) {
                         return yandexTranslateService.translateRequest(word, request.getSourceLang(),
                                 request.getTargetLang());
                     } else {

@@ -191,7 +191,7 @@ class TranslationControllerTest {
     @Test
     void testSplitTextWithPunctuationOnly() {
         String text = ",.!?";
-        List<String> expected = Arrays.asList(",", ".", "!", "?");
+        List<String> expected = List.of(",.!?");
         List<String> result = translationController.splitTextIntoWordsAndPunctuationMarks(text);
         assertEquals(expected, result);
     }

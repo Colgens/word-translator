@@ -101,7 +101,7 @@ public class TranslationController {
 
     public List<String> splitTextIntoWordsAndPunctuationMarks(String text) {
         List<String> parts = new ArrayList<>();
-        Pattern pattern = Pattern.compile("\\w+|\\p{Punct}\\s*");
+        Pattern pattern = Pattern.compile("[^\\p{Punct}\\s]+-[^\\p{Punct}\\s]+|[^\\p{Punct}\\s]+");
         Matcher matcher = pattern.matcher(text);
         int lastEnd = 0;
         while (matcher.find()) {
