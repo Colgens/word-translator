@@ -37,4 +37,3 @@ class TranslationRepositoryTest {
         verify(jdbcTemplate, times(1)).update(any(String.class), any(Object[].class));
     }
 }
-

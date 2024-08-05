@@ -1,24 +1,24 @@
 package ru.tbank.translator.controller;
 
-
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.MediaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
+import jakarta.servlet.http.HttpServletRequest;
 import ru.tbank.translator.model.TranslationRequest;
 import ru.tbank.translator.service.TranslationService;
 import ru.tbank.translator.service.YandexLanguageService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @RestController
+@RequestMapping("/translate")
 public class TranslationController {
 
     private final TranslationService translationService;
@@ -29,39 +29,52 @@ public class TranslationController {
         this.yandexLanguageService = yandexLanguageService;
     }
 
-    @PostMapping(value = "/translate", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
+    @PostMapping(consumes = "application/json")
     public ResponseEntity<String> translate(@RequestBody String requestBody) {
-        String[] parts = requestBody.split("\\n");
-        if (parts.length != 2) {
-            return ResponseEntity.badRequest().body("Некорректный формат запроса");
+
+        TranslationRequest request = parseJson(requestBody);
+
+        if (request == null) {
+            return ResponseEntity.badRequest().body("Некорректный формат JSON");
         }
-        if (!parts[0].contains("→")) {
-            return ResponseEntity.badRequest().body("Исходный и целевой языки должны быть разделены символом '→'");
+
+        String sourceLanguage = request.getSourceLang();
+        String targetLanguage = request.getTargetLang();
+        String text = request.getText();
+
+        Set<String> availableLanguages = yandexLanguageService.getAvailableLanguages();
+
+        if (sourceLanguage == null || sourceLanguage.isEmpty()) {
+            return ResponseEntity.badRequest().body("Исходный язык не указан");
         }
-        String[] languages = parts[0].split("→");
-        if (languages.length != 2) {
-            return ResponseEntity.badRequest().body("Некорректный формат запроса");
+        if (targetLanguage == null || targetLanguage.isEmpty()) {
+            return ResponseEntity.badRequest().body("Целевой язык не указан");
         }
-        String sourceLanguage = languages[0].trim();
-        String targetLanguage = languages[1].trim();
-        if (!yandexLanguageService.getAvailableLanguages().contains(sourceLanguage)) {
+        if (!availableLanguages.contains(sourceLanguage)) {
             return ResponseEntity.badRequest().body("Не найден язык исходного сообщения");
         }
-        if (!yandexLanguageService.getAvailableLanguages().contains(targetLanguage)) {
+
+        if (!availableLanguages.contains(targetLanguage)) {
             return ResponseEntity.badRequest().body("Не найден целевой язык для перевода");
         }
 
+        if (text == null || text.isEmpty()) {
+            return ResponseEntity.badRequest().body("Текст не может быть пустым");
+        }
 
-
-        TranslationRequest request = new TranslationRequest();
-        request.setSourceLang(languages[0].trim());
-        request.setTargetLang(languages[1].trim());
-        request.setText(parts[1].trim());
-        request.setElements(splitTextIntoWordsWithPunctuation(request.getText()));
+        request.setElements(splitTextIntoWordsAndPunctuationMarks(text));
         request.setIpAddress(getClientIp());
         return ResponseEntity.ok(translationService.translateWords(request));
     }
 
+    private TranslationRequest parseJson(String json) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.readValue(json, TranslationRequest.class);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     private String getClientIp() {
         String[] ipHeaders = {
@@ -86,8 +99,7 @@ public class TranslationController {
         return request.getRemoteAddr();
     }
 
-
-    public List<String> splitTextIntoWordsWithPunctuation(String text) {
+    public List<String> splitTextIntoWordsAndPunctuationMarks(String text) {
         List<String> parts = new ArrayList<>();
         Pattern pattern = Pattern.compile("\\w+|\\p{Punct}\\s*");
         Matcher matcher = pattern.matcher(text);
@@ -104,6 +116,4 @@ public class TranslationController {
         }
         return parts;
     }
-
-
 }

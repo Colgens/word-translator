@@ -9,20 +9,17 @@ import org.springframework.web.client.RestClientException;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<String> handleBadRequestException(BadRequestException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-    }
-
     @ExceptionHandler(RestClientException.class)
     public ResponseEntity<String> handleRestClientException(RestClientException ex) {
+        System.err.println("Ошибка доступа к ресурсу перевода: " + ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body("Ошибка доступа к ресурсу перевода: " + ex.getMessage());
+                .body("Ошибка доступа к ресурсу перевода");
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGenericException(Exception ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body("Внутренняя ошибка сервера: " + ex.getMessage());
+        System.err.println("Внутренняя ошибка сервера: " + ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Внутренняя ошибка сервера");
     }
 }

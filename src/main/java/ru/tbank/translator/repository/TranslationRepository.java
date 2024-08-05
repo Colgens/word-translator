@@ -12,15 +12,7 @@ public class TranslationRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-
     public void saveTranslation(TranslationRequest translationRequest) {
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS translation_requests (" +
-                "id SERIAL PRIMARY KEY, " +
-                "ip_address VARCHAR(255), " +
-                "text TEXT, " +
-                "translated_text TEXT)");
-
         String sql = "INSERT INTO translation_requests (ip_address, text, translated_text) values (?, ?, ?)";
         jdbcTemplate.update(sql, translationRequest.getIpAddress(), translationRequest.getText(),
                 translationRequest.getTranslatedText());

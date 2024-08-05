@@ -19,7 +19,13 @@ public class YandexLanguageService {
     private static final String YANDEX_LANGUAGES_API_URL =
             "https://translate.api.cloud.yandex.net/translate/v2/languages";
 
+    private final RestTemplate restTemplate;
+
     private Set<String> availableLanguages;
+
+    public YandexLanguageService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     public Set<String> getAvailableLanguages() {
         if (availableLanguages == null) {
@@ -29,8 +35,6 @@ public class YandexLanguageService {
     }
 
     public void refreshAvailableLanguages() {
-        RestTemplate restTemplate = new RestTemplate();
-
         String requestBody = "{}";
 
         HttpHeaders headers = new HttpHeaders();
