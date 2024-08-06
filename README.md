@@ -74,7 +74,7 @@
 
    2. Настройка конфигурации запуска:
 
-      -  в раздел Run -> Edit Configurations....
+      - Перейдите в раздел Run -> Edit Configurations....
 
       - Нажмите на + и выберите Application или Spring Boot.
 
