@@ -7,7 +7,7 @@
 
 ## Требования
 
-- Java 17
+- Java 17+
 - Maven 3.6+
 - Реляционная база данных (MySQL, PostgreSQL, H2)
 
