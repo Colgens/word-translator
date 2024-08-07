@@ -2,6 +2,6 @@ CREATE TABLE IF NOT EXISTS translation_requests
 (
     id              SERIAL PRIMARY KEY,
     ip_address      VARCHAR(255),
-    text            TEXT,
+    original_text            TEXT,
     translated_text TEXT
 );

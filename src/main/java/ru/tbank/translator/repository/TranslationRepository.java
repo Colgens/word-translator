@@ -13,7 +13,7 @@ public class TranslationRepository {
     }
 
     public void saveTranslation(TranslationRequest translationRequest) {
-        String sql = "INSERT INTO translation_requests (ip_address, text, translated_text) values (?, ?, ?)";
+        String sql = "INSERT INTO translation_requests (ip_address, original_text, translated_text) values (?, ?, ?)";
         jdbcTemplate.update(sql, translationRequest.getIpAddress(), translationRequest.getText(),
                 translationRequest.getTranslatedText());
     }
