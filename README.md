@@ -64,6 +64,41 @@
     ```bash
     mvn spring-boot:run
     ```
+    
+## Инструкция по запуску приложения через IntelliJ IDEA
+   1. Откройте проект в IntelliJ IDEA:
+      - Запустите IntelliJ IDEA.
+
+      - Выберите Open и укажите путь к директории проекта.
+      
+
+   2. Настройка конфигурации запуска:
+
+      - Перейдите в раздел Run -> Edit Configurations....
+
+      - Нажмите на + и выберите Application или Spring Boot.
+
+      - Укажите имя конфигурации (например, WordTranslatorApplication).
+
+      - В поле Main class выберите ru.tbank.translator.TranslatorAppApplication.
+
+      - Убедитесь, что в настройках проекта в IntelliJ IDEA указан правильный SDK (File -> Project Structure -> Project Settings -> Project -> SDK). Выберите JDK 17 или выше.
+
+      - Нажмите Apply и OK.
+      
+
+   3. Запустите приложение:
+      - Выберите созданную конфигурацию и нажмите на зеленую кнопку Run или используйте сочетание клавиш Shift + F10.
+     
+   Теперь приложение должно запуститься и будет доступно по адресу http://localhost:8080, если он не был намеренно изменён в файле `application.properties`. IP адрес, исходный и переведенный текст будут сохраняться в созданную таблицу `translation_requests`.
+
+## Устрание проблем
+- Убедитесь, что API ключ Yandex Translator и параметры подключения в `application.properties` верны и база данных запущена.
+- Если приложение не запускается, так как порт 8080 уже используется другим приложением или закрыт, измените порт в файле application.properties: 
+    ```properties
+    server.port=8081
+    ```
+    В данном случае адрес изменится на http://localhost:8081.
 
 ## Инструкция по запуску приложения через IntelliJ IDEA
 1. Откройте проект в IntelliJ IDEA:
