@@ -34,7 +34,7 @@
    spring.sql.init.schema-locations=classpath:schema.sql
    ```
 
-2. Настройте схему базы данных. Отредактируйте файл `src/main/resources/schema.sql` в соответствии с используемой базой данных, не изменяя название таблицы `translation_requests`. Примеры схемы для различных баз данных:
+2. Настройте схему базы данных. Отредактируйте файл `src/main/resources/schema.sql` в соответствии с используемой базой данных, не изменяя названия столбцов и таблицы `translation_requests`. Примеры схемы для различных баз данных:
    #### Пример для MySQL и H2:
    ```sql
    CREATE TABLE IF NOT EXISTS translation_requests (
